@@ -1,6 +1,6 @@
 const express = require('express')
 const database = require('./config/database')
-const eventRoutes = require('/routes/EventRoutes')
+const eventRoutes = require('./routes/eventRoutes')
 
 const app = express();
 app.use(express.json());
