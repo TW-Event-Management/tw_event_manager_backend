@@ -60,22 +60,23 @@ exports.verifyToken = async (req, res) => {
     const token = req.body.token;
 
     if (!token) {
-        res.json({ auth: false });
+        return res.json({ auth: false });
     }
 
     try {
-        const decodedToken = JWT.decode(token, 'secretKey');
+        const decodedToken = JWT.decode(token, 'secretkey');
         const userId = decodedToken.userId;
 
-        User.findById(userId, (err, user) => {
-            if (err || !user) {
-                res.json({ auth: false });
-            }
+        const user = await User.findById(userId);
 
-            res.json({ auth: true, user });
-        });
+        if (!user) {
+            return res.json({ auth: false });
+        }
+
+        return res.json({ auth: true, user });
     } catch (err) {
-        res.json({ auth: false });
+        console.error(err);
+        return res.json({ auth: false });
     }
 }
 
