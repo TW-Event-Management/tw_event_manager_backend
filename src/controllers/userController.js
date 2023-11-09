@@ -16,7 +16,7 @@ exports.registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    const user = new User ({
+    const user = new User({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
@@ -28,10 +28,54 @@ exports.registerUser = async (req, res) => {
         const newUser = await user.save();
 
         //Create a session token using jwt
-        const token = JWT.sign({ userId: newUser._id}, 'secretkey');
+        const token = JWT.sign({ userId: newUser._id }, 'secretkey');
         res.status(201).json({ newUser, token });
     } catch (err) {
         res.status(400).json({ message: err.message });
+    }
+}
+
+exports.loginUser = async (req, res) => {
+    const email = req.body.email;
+
+    const userExists = await User.findOne({ email });
+    if (!userExists) {
+        return res.status(401).json({ message: "User does not exist" });
+    }
+
+    const validPassword = await bcrypt.compare(req.body.password, userExists.password);
+    if (!validPassword) {
+        return res.status(401).json({ message: "Invalid password" });
+    }
+
+    try {
+        const token = JWT.sign({ userId: userExists._id }, 'secretkey');
+        res.status(201).json({ token });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}
+
+exports.verifyToken = async (req, res) => {
+    const token = req.body.token;
+
+    if (!token) {
+        res.json({ auth: false });
+    }
+
+    try {
+        const decodedToken = JWT.decode(token, 'secretKey');
+        const userId = decodedToken.userId;
+
+        User.findById(userId, (err, user) => {
+            if (err || !user) {
+                res.json({ auth: false });
+            }
+
+            res.json({ auth: true, user });
+        });
+    } catch (err) {
+        res.json({ auth: false });
     }
 }
 
