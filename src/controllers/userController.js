@@ -5,8 +5,8 @@ const JWT = require('jsonwebtoken');
 exports.registerUser = async (req, res) => {
     //check for existing user with email
 
-    const mail = req.body.mail;
-    const existingUser = await User.findOne({ mail });
+    const email = req.body.email;
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
         return res.status(409).json({ message: "User already exists" });
@@ -36,20 +36,22 @@ exports.registerUser = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    const email = req.body.email;
 
-    const userExists = await User.findOne({ email });
-    if (!userExists) {
-        return res.status(401).json({ message: "User does not exist" });
+    const email = req.body.mail;
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+        return res.status(409).json({ error: 'User not found.' });
     }
 
-    const validPassword = await bcrypt.compare(req.body.password, userExists.password);
-    if (!validPassword) {
-        return res.status(401).json({ message: "Invalid password" });
+    const isPasswordValid = await bcrypt.compare(req.body.password, existingUser.password);
+
+    if (!isPasswordValid) {
+        return res.status(401).json({ error: 'Invalid credentials.' });
     }
 
     try {
-        const token = JWT.sign({ userId: userExists._id }, 'secretkey');
+        const token = JWT.sign({ userId: existingUser._id }, 'secretKey');
         res.status(201).json({ token });
     } catch (err) {
         res.status(400).json({ message: err.message });
