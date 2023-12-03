@@ -13,6 +13,7 @@ exports.createEvent = async (req, res) => {
     const event = new Event({
         name: req.body.name,
         description: req.body.description,
+        organizer: req.body.organizer,
         date: req.body.date,
         location: req.body.location,
     });
