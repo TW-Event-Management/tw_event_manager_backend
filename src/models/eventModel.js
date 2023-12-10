@@ -18,13 +18,13 @@ const eventSchema = new mongoose.Schema({
         required: true,
     },
     location: {
-        type: String,
-        required: true,
+        locName: {
+          type: String,
+        },
+        coordinates: {
+          type: [Number],
+        },
     },
-    coordinates: {
-        type: [Number],
-        required: true,
-    }
 });
 
 const Event = mongoose.model('Event', eventSchema);
