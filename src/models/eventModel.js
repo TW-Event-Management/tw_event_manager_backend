@@ -21,6 +21,10 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    coordinates: {
+        type: [Number],
+        required: true,
+    }
 });
 
 const Event = mongoose.model('Event', eventSchema);
