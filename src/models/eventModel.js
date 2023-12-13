@@ -25,6 +25,9 @@ const eventSchema = new mongoose.Schema({
           type: [Number],
         },
     },
+    invitations: {
+        type: [String],
+    }
 });
 
 const Event = mongoose.model('Event', eventSchema);
