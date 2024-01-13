@@ -22,6 +22,7 @@ exports.registerUser = async (req, res) => {
         email: req.body.email,
         password: hashedPassword,
         admin: req.body.admin,
+        waiting: req.body.waiting,
     });
 
     try {
@@ -101,3 +102,25 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 }
+
+exports.setWaiting = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findByIdAndUpdate(userId, { waiting: true }, { new: true });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.setAdmin = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findByIdAndUpdate(userId, { admin: true }, { new: true });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};

@@ -30,7 +30,11 @@ const eventSchema = new mongoose.Schema({
     },
     participants: {
         type: [String]
-    }
+    },
+    category: {
+        type: String,
+        required: true,
+    },
 });
 
 const Event = mongoose.model('Event', eventSchema);
