@@ -123,6 +123,7 @@ exports.createEvent = async (req, res) => {
     location: req.body.location,
     invitations: req.body.invitations,
     participants: req.body.participants,
+    category: req.body.category,
   });
 
   try {
