@@ -107,7 +107,7 @@ exports.setWaiting = async (req, res) => {
     const userId = req.params.id;
 
     try {
-        const user = await User.findByIdAndUpdate(userId, { waiting: true }, { new: true });
+        const user = await User.findByIdAndUpdate(userId, { waiting: false }, { new: true });
         res.json(user);
     } catch (err) {
         res.status(500).json({ message: err.message });
