@@ -107,7 +107,7 @@ exports.setWaiting = async (req, res) => {
     const userId = req.params.id;
 
     try {
-        const user = await User.findByIdAndUpdate(userId, { waiting: false }, { new: true });
+        const user = await User.findByIdAndUpdate(userId, { waiting: true }, { new: true });
         res.json(user);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -120,6 +120,17 @@ exports.setAdmin = async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(userId, { admin: true }, { new: true });
         res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.setWaitingDecline = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        await User.findByIdAndUpdate(userId, { waiting: false });
+        res.json({ message: "User declined successfully" });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

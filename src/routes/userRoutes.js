@@ -8,5 +8,6 @@ router.delete('/delete-user/:id', userController.deleteUser);
 
 router.patch('/setWaiting/:id', userController.setWaiting);
 router.patch('/setAdmin/:id', userController.setAdmin);
+router.patch('/setWaitingDecline/:id', userController.setWaitingDecline);
 
 module.exports = router;
